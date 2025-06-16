@@ -327,7 +327,6 @@ Required models:
                 weight_dtype=self.dtype,
                 width=self.config["data"]["resolution"],
                 height=self.config["data"]["resolution"],
-                mask_image_path=self.config["data"]["mask_image_path"],
             )
             
             # Move output to final location

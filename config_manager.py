@@ -41,8 +41,12 @@ class ConfigManager:
         if not path:
             raise ValueError(f"Model path for '{model_type}' not configured. Please check config.json")
         
+        # Don't modify HuggingFace model IDs or URLs
+        if path.startswith(("http://", "https://")) or "/" in path and not path.startswith("./"):
+            return path
+        
         # Convert relative paths to absolute
-        if not os.path.isabs(path) and not path.startswith(("http://", "https://")):
+        if not os.path.isabs(path):
             path = str(self.node_dir / path)
         
         return path
@@ -81,8 +85,7 @@ class ConfigManager:
                 "data": {
                     "num_frames": self.settings["model_settings"]["num_frames"],
                     "audio_feat_length": self.settings["model_settings"]["audio_feat_length"],
-                    "resolution": self.settings["model_settings"]["resolution"],
-                    "mask_image_path": str(self.node_dir / "utils" / "mask.png")
+                    "resolution": self.settings["model_settings"]["resolution"]
                 }
             }
     
