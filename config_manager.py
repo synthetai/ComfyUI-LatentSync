@@ -33,9 +33,8 @@ class ConfigManager:
     
     def _get_default_config(self) -> Dict[str, Any]:
         """Get default configuration"""
-        # Use the same structure as original project for compatibility
-        project_root = self.node_dir.parent
-        checkpoints_dir = project_root / "checkpoints"
+        # Use checkpoints directory within the node directory
+        checkpoints_dir = self.node_dir / "checkpoints"
         
         return {
             "model_paths": {

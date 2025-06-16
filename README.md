@@ -96,12 +96,19 @@ ComfyUI/                       # ComfyUI目录
 ```json
 {
   "model_paths": {
-    "unet_checkpoint": "../checkpoints/latentsync_unet.pt",
-    "whisper_model": "../checkpoints/whisper/tiny.pt",
-    "auxiliary_models": "../checkpoints/auxiliary",
+    "unet_checkpoint": "./checkpoints/latentsync_unet.pt",
+    "whisper_model": "./checkpoints/whisper/tiny.pt",
+    "auxiliary_models": "./checkpoints/auxiliary",
     "vae_model": "stabilityai/sd-vae-ft-mse"
   }
 }
+```
+
+**重要**: 节点现在期望模型文件在节点目录下的 `checkpoints/` 文件夹中。请将下载的模型文件复制到正确位置：
+
+```bash
+# 将模型文件复制到节点目录
+cp -r /path/to/LatentSync/checkpoints/* /path/to/ComfyUI/custom_nodes/LatentSync/checkpoints/
 ```
 
 ## 🎮 使用方法
