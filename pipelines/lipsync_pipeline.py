@@ -372,7 +372,7 @@ class LipsyncPipeline(DiffusionPipeline):
         guidance_scale: float = 1.5,
         weight_dtype: Optional[torch.dtype] = torch.float16,
         eta: float = 0.0,
-        mask_image_path: str = "latentsync/utils/mask.png",
+        mask_image_path: str = None,
         generator: Optional[Union[torch.Generator, List[torch.Generator]]] = None,
         callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
         callback_steps: Optional[int] = 1,

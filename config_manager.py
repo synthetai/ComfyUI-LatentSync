@@ -144,7 +144,7 @@ class ConfigManager:
                     "num_frames": self.settings["model_settings"]["num_frames"],
                     "audio_feat_length": self.settings["model_settings"]["audio_feat_length"],
                     "resolution": self.settings["model_settings"]["resolution"],
-                    "mask_image_path": str(self.node_dir / "configs" / "mask_image.png")
+                    "mask_image_path": str(self.node_dir / "utils" / "mask.png")
                 }
             }
     
