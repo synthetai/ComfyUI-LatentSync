@@ -230,17 +230,17 @@ Required models:
     def get_model_info(self) -> str:
         """Get information about loaded models"""
         try:
-            model_status = config_manager.check_model_files()
+            model_status = self.config_manager.check_model_files()
             info_lines = ["📊 Model Information:"]
             
             for model_type, exists in model_status.items():
                 status = "✅" if exists else "❌"
-                path = config_manager.settings["model_paths"].get(model_type, "Not configured")
+                path = self.config_manager.settings["model_paths"].get(model_type, "Not configured")
                 info_lines.append(f"{status} {model_type}: {path}")
             
-            info_lines.append(f"🔧 Cross attention dim: {config_manager.settings['model_settings']['cross_attention_dim']}")
-            info_lines.append(f"📐 Resolution: {config_manager.settings['model_settings']['resolution']}")
-            info_lines.append(f"🎞️ Frames: {config_manager.settings['model_settings']['num_frames']}")
+            info_lines.append(f"🔧 Cross attention dim: {self.config_manager.settings['model_settings']['cross_attention_dim']}")
+            info_lines.append(f"📐 Resolution: {self.config_manager.settings['model_settings']['resolution']}")
+            info_lines.append(f"🎞️ Frames: {self.config_manager.settings['model_settings']['num_frames']}")
             
             return "\n".join(info_lines)
         except Exception as e:
@@ -296,7 +296,7 @@ Required models:
             if output_directory and os.path.isdir(output_directory):
                 output_dir = Path(output_directory)
             else:
-                output_dir = Path(config_manager.node_dir) / config_manager.settings["paths"]["output_dir"]
+                output_dir = Path(self.config_manager.node_dir) / self.config_manager.settings["paths"]["output_dir"]
                 output_dir.mkdir(parents=True, exist_ok=True)
             
             # Create output filename
@@ -359,7 +359,7 @@ Required models:
             
             # Provide specific error guidance
             if "Configuration error" in str(e) or "not configured" in str(e):
-                error_msg += f"\n\n💡 Please check configuration file: {config_manager.config_file}"
+                error_msg += f"\n\n💡 Please check configuration file: {self.config_manager.config_file}"
             elif "Face not detected" in str(e):
                 error_msg += "\n\n💡 Suggestions:\n• Try 'very_lenient' face detection mode\n• Ensure video contains clear, visible faces\n• Check video quality and lighting"
             elif "Model" in str(e) and "not found" in str(e):
@@ -379,5 +379,5 @@ if __name__ == "__main__":
     # Test the node
     node = LatentSyncStandaloneNode()
     print("LatentSync Standalone ComfyUI Node created successfully!")
-    print(f"Config file: {config_manager.config_file}")
+    print(f"Config file: {node.config_manager.config_file}")
     print("Please configure model paths in config.json before use.") 

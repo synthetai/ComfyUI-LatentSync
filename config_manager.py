@@ -118,8 +118,13 @@ class ConfigManager:
             if model_type == "vae_model" and path.startswith(("http://", "https://", "stabilityai/")):
                 # HuggingFace model, assume available
                 results[model_type] = True
-            elif path and os.path.exists(path):
-                results[model_type] = True
+            elif path:
+                # Use get_model_path to resolve relative paths correctly
+                try:
+                    resolved_path = self.get_model_path(model_type)
+                    results[model_type] = os.path.exists(resolved_path)
+                except ValueError:
+                    results[model_type] = False
             else:
                 results[model_type] = False
         
