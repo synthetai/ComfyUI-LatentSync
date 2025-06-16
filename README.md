@@ -114,7 +114,13 @@ ComfyUI/
    - `inference_steps`：推理步数（默认20）
    - `guidance_scale`：引导系数（默认2.0）
    - `face_detection_mode`：人脸检测模式（推荐lenient）
+   - `output_directory`：输出目录（可选，默认使用ComfyUI的output目录）
 5. **执行工作流**
+
+### 输出文件位置
+- **默认位置**：`/path/to/ComfyUI/output/` （ComfyUI主输出目录）
+- **自定义位置**：在节点的 `output_directory` 参数中指定路径
+- **文件名格式**：`{原视频名}_latentsync_{时间戳}.mp4`
 
 ## 🔧 人脸检测模式
 
@@ -187,4 +193,4 @@ Apache License 2.0
 
 ---
 
-**�� 开箱即用的口型同步解决方案！** 
+**开箱即用的口型同步解决方案！** 

@@ -296,7 +296,13 @@ Required models:
             if output_directory and os.path.isdir(output_directory):
                 output_dir = Path(output_directory)
             else:
-                output_dir = Path(self.config_manager.node_dir) / self.config_manager.settings["paths"]["output_dir"]
+                # Use ComfyUI's output directory by default
+                comfyui_output_dir = Path(self.config_manager.node_dir).parent.parent.parent / "output"
+                if comfyui_output_dir.exists():
+                    output_dir = comfyui_output_dir
+                else:
+                    # Fallback to node's output directory
+                    output_dir = Path(self.config_manager.node_dir) / self.config_manager.settings["paths"]["output_dir"]
                 output_dir.mkdir(parents=True, exist_ok=True)
             
             # Create output filename

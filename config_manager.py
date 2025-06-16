@@ -41,8 +41,13 @@ class ConfigManager:
         if not path:
             raise ValueError(f"Model path for '{model_type}' not configured. Please check config.json")
         
-        # Don't modify HuggingFace model IDs or URLs
-        if path.startswith(("http://", "https://")) or "/" in path and not path.startswith("./"):
+        # Don't modify URLs or HuggingFace model IDs
+        if path.startswith(("http://", "https://")):
+            return path
+        
+        # Check if it's a HuggingFace model ID (contains "/" but doesn't start with "./" or "/")
+        if "/" in path and not path.startswith(("./", "/")):
+            # This is likely a HuggingFace model ID like "stabilityai/sd-vae-ft-mse"
             return path
         
         # Convert relative paths to absolute
