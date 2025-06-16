@@ -9,7 +9,7 @@ torchvision>=0.15.0,<=0.20.1
 # Diffusion and ML Libraries
 diffusers==0.32.2
 transformers==4.48.0
-accelerate==0.26.1
+accelerate>=0.34.0
 einops==0.7.0
 omegaconf==2.3.0
 
