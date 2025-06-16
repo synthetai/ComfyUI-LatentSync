@@ -21,78 +21,17 @@ class ConfigManager:
         self.settings = self._load_config()
     
     def _load_config(self) -> Dict[str, Any]:
-        """Load configuration from config.json or create default"""
+        """Load configuration from config.json"""
         if self.config_file.exists():
             with open(self.config_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
         else:
-            # Create default config
-            default_config = self._get_default_config()
-            self.save_config(default_config)
-            return default_config
+            raise FileNotFoundError(
+                f"Configuration file not found: {self.config_file}\n"
+                f"Please ensure config.json exists in the node directory."
+            )
     
-    def _get_default_config(self) -> Dict[str, Any]:
-        """Get default configuration"""
-        # Use checkpoints directory within the node directory
-        checkpoints_dir = self.node_dir / "checkpoints"
-        
-        return {
-            "model_paths": {
-                "unet_checkpoint": str(checkpoints_dir / "latentsync_unet.pt"),
-                "whisper_model": str(checkpoints_dir / "whisper/tiny.pt"),
-                "auxiliary_models": str(checkpoints_dir / "auxiliary"),
-                "vae_model": "stabilityai/sd-vae-ft-mse"  # HuggingFace model
-            },
-            "model_settings": {
-                "cross_attention_dim": 384,  # Default to tiny model
-                "num_frames": 16,
-                "audio_feat_length": 16,
-                "resolution": 512
-            },
-            "face_detection": {
-                "default_mode": "lenient",
-                "presets": {
-                    "default": {
-                        "min_face_size": 50,
-                        "min_face_height": 80,
-                        "aspect_ratio_range": [0.2, 1.5],
-                        "detection_threshold": 0.5,
-                        "debug": True
-                    },
-                    "lenient": {
-                        "min_face_size": 30,
-                        "min_face_height": 50,
-                        "aspect_ratio_range": [0.1, 3.0],
-                        "detection_threshold": 0.3,
-                        "debug": True
-                    },
-                    "very_lenient": {
-                        "min_face_size": 20,
-                        "min_face_height": 30,
-                        "aspect_ratio_range": [0.05, 5.0],
-                        "detection_threshold": 0.2,
-                        "debug": True
-                    }
-                }
-            },
-            "performance": {
-                "enable_deepcache": True,
-                "cache_interval": 3,
-                "cache_branch_id": 0
-            },
-            "paths": {
-                "output_dir": "./outputs",
-                "temp_dir": "./temp"
-            }
-        }
-    
-    def save_config(self, config: Optional[Dict[str, Any]] = None):
-        """Save configuration to file"""
-        if config is None:
-            config = self.settings
-        
-        with open(self.config_file, 'w', encoding='utf-8') as f:
-            json.dump(config, f, indent=2, ensure_ascii=False)
+
     
     def get_model_path(self, model_type: str) -> str:
         """Get model path for specified type"""

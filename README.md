@@ -56,34 +56,30 @@ pip install huggingface_hub
 
 ## 📥 模型下载
 
-### 步骤4：下载模型文件
+### 步骤4：下载模型文件到节点目录
 ```bash
-# 在LatentSync项目根目录下执行（不是ComfyUI目录）
-cd /path/to/LatentSync
+# 进入节点目录
+cd /path/to/ComfyUI/custom_nodes/LatentSync
 
-# 下载模型文件
+# 下载模型文件到节点的checkpoints目录
 huggingface-cli download ByteDance/LatentSync-1.5 whisper/tiny.pt --local-dir checkpoints
 huggingface-cli download ByteDance/LatentSync-1.5 latentsync_unet.pt --local-dir checkpoints
 ```
-
-模型将下载到 `LatentSync/checkpoints/` 目录，节点会自动识别和使用。
 
 **📝 注意**: VAE模型 (`stabilityai/sd-vae-ft-mse`) 会在首次运行时自动从HuggingFace下载到缓存目录，无需手动下载。
 
 ### 目录结构说明
 安装完成后的目录结构应该是：
 ```
-LatentSync/                    # 原项目目录
-├── checkpoints/               # 模型文件目录
-│   ├── latentsync_unet.pt
-│   ├── whisper/tiny.pt
-│   └── auxiliary/
-└── ...
-
-ComfyUI/                       # ComfyUI目录
+ComfyUI/
 └── custom_nodes/
     └── LatentSync/            # 节点安装位置
-        ├── config.json        # 配置文件（自动生成）
+        ├── config.json        # 配置文件（预设）
+        ├── checkpoints/       # 模型文件目录
+        │   ├── latentsync_unet.pt
+        │   ├── whisper/
+        │   │   └── tiny.pt
+        │   └── auxiliary/
         ├── models/            # 内嵌模型代码
         ├── pipelines/         # 内嵌管道代码
         └── ...
@@ -91,7 +87,7 @@ ComfyUI/                       # ComfyUI目录
 
 ## ⚙️ 配置说明
 
-首次运行时会自动创建配置文件 `config.json`，默认使用以下路径：
+配置文件 `config.json` 已预设好，使用以下路径：
 
 ```json
 {
@@ -104,12 +100,7 @@ ComfyUI/                       # ComfyUI目录
 }
 ```
 
-**重要**: 节点现在期望模型文件在节点目录下的 `checkpoints/` 文件夹中。请将下载的模型文件复制到正确位置：
-
-```bash
-# 将模型文件复制到节点目录
-cp -r /path/to/LatentSync/checkpoints/* /path/to/ComfyUI/custom_nodes/LatentSync/checkpoints/
-```
+**重要**: 请确保按照上述目录结构下载模型文件到正确位置。
 
 ## 🎮 使用方法
 

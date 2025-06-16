@@ -1,0 +1,5 @@
+# This file ensures the checkpoints directory is tracked by git
+# Download your model files to this directory:
+# - latentsync_unet.pt
+# - whisper/tiny.pt
+# - auxiliary/ (directory for auxiliary models) 

@@ -14,7 +14,7 @@ import numpy as np
 from datetime import datetime
 
 # Import local modules
-from .config_manager import config_manager
+from .config_manager import ConfigManager
 from omegaconf import OmegaConf
 from diffusers import AutoencoderKL, DDIMScheduler
 from accelerate.utils import set_seed
@@ -43,8 +43,11 @@ class LatentSyncStandaloneNode:
         self.config = None
         self.dtype = torch.float16 if torch.cuda.is_available() and torch.cuda.get_device_capability()[0] > 7 else torch.float32
         
+        # Initialize config manager
+        self.config_manager = ConfigManager()
+        
         # Ensure output directories exist
-        config_manager.ensure_output_dirs()
+        self.config_manager.ensure_output_dirs()
         
     @classmethod
     def INPUT_TYPES(cls):
@@ -120,7 +123,7 @@ class LatentSyncStandaloneNode:
     
     def validate_model_paths(self) -> Tuple[bool, str]:
         """Validate that all required model paths are configured and exist"""
-        model_status = config_manager.check_model_files()
+        model_status = self.config_manager.check_model_files()
         missing_models = [k for k, v in model_status.items() if not v]
         
         if missing_models:
@@ -128,7 +131,7 @@ class LatentSyncStandaloneNode:
             error_msg = f"""❌ Missing model files: {missing_str}
 
 📝 Please configure model paths in config.json:
-{config_manager.config_file}
+{self.config_manager.config_file}
 
 Required models:
 • unet_checkpoint: Path to latentsync_unet.pt
@@ -156,18 +159,18 @@ Required models:
             raise RuntimeError(msg)
         
         # Load configuration
-        self.config = config_manager.get_unet_config()
+        self.config = self.config_manager.get_unet_config()
         
         # Get model paths
         try:
-            checkpoint_path = config_manager.get_model_path("unet_checkpoint")
-            whisper_model_path = config_manager.get_whisper_model_path()
-            vae_model_id = config_manager.get_model_path("vae_model")
+            checkpoint_path = self.config_manager.get_model_path("unet_checkpoint")
+            whisper_model_path = self.config_manager.get_whisper_model_path()
+            vae_model_id = self.config_manager.get_model_path("vae_model")
         except ValueError as e:
             raise RuntimeError(f"Configuration error: {e}")
         
         # Initialize scheduler
-        scheduler_config_path = config_manager.get_scheduler_config_path()
+        scheduler_config_path = self.config_manager.get_scheduler_config_path()
         scheduler = DDIMScheduler.from_pretrained(scheduler_config_path)
         
         # Initialize audio encoder
@@ -200,11 +203,11 @@ Required models:
         ).to("cuda")
         
         # Enable DeepCache for acceleration
-        if config_manager.settings["performance"]["enable_deepcache"]:
+        if self.config_manager.settings["performance"]["enable_deepcache"]:
             helper = DeepCacheSDHelper(pipe=self.pipeline)
             helper.set_params(
-                cache_interval=config_manager.settings["performance"]["cache_interval"],
-                cache_branch_id=config_manager.settings["performance"]["cache_branch_id"]
+                cache_interval=self.config_manager.settings["performance"]["cache_interval"],
+                cache_branch_id=self.config_manager.settings["performance"]["cache_branch_id"]
             )
             helper.enable()
         
@@ -222,7 +225,7 @@ Required models:
                 'debug': True
             }
         else:
-            return config_manager.get_face_detection_config(mode)
+            return self.config_manager.get_face_detection_config(mode)
     
     def get_model_info(self) -> str:
         """Get information about loaded models"""
