@@ -68,6 +68,8 @@ huggingface-cli download ByteDance/LatentSync-1.5 latentsync_unet.pt --local-dir
 
 模型将下载到 `LatentSync/checkpoints/` 目录，节点会自动识别和使用。
 
+**📝 注意**: VAE模型 (`stabilityai/sd-vae-ft-mse`) 会在首次运行时自动从HuggingFace下载到缓存目录，无需手动下载。
+
 ### 目录结构说明
 安装完成后的目录结构应该是：
 ```
